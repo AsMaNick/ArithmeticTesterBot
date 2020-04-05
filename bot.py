@@ -280,7 +280,7 @@ def reply_all_messages(message):
                     else:
                         improvement_message += ': '
                     improvement_message += 'стал быстрее на {}'.format(str_time(achievement.elapsed_time - elapsed_time))
-                res += 'Ты улучшил свой персональный рекод{}!'.format(improvement_message)
+                res += 'Ты улучшил свой персональный рекорд{}!'.format(improvement_message)
                 if achievement.correct_answers < last_test.correct_answers:
                     sticker = 'quality'
                 achievement.correct_answers = last_test.correct_answers
