@@ -1,6 +1,7 @@
 ﻿import random
 import telebot
 from json import load
+from time import sleep
 from telebot import types
 from collections import defaultdict
 from utils import *
@@ -314,6 +315,7 @@ def log_message(message):
 
 
 if __name__ == '__main__':
+    restarts = 0
     while True:
         try:
             print('Start polling')
@@ -321,4 +323,8 @@ if __name__ == '__main__':
         except Exception as E:
             print('Some exception while polling')
             print(E)
-            exit()
+            sleep_time = 10
+            print('Sleep for {} seconds...'.format(sleep_time))
+            sleep(sleep_time)
+            restarts += 1
+            print('Restart #{}'.format(restarts))
