@@ -72,19 +72,24 @@ def show_results(message):
 def show_all_results(message):
     user = init_user(message)
     last_command = user.last_command
-    last_command.command = 'show_all_results'
-    last_command.save()
-    res = ''
-    for num, user in enumerate(User.select()):
-        add = ''
-        for num, achievement in enumerate(Achievement.select().where(Achievement.user == user), 1):
-            add += '- {}. {}/{}, {}\n'.format(achievement.test.name, achievement.correct_answers, achievement.test.n_samples, str_time(achievement.elapsed_time))
-        if add != '':
-            res += '{}. {}:\n'.format(num, user.name)
-            res += add + '\n'
-    if res == '':
-        res = 'Никто еще не проходил тесты.'
-    bot.send_message(message.chat.id, res, parse_mode='html')
+    if user.chat_id not in admin_ids:
+        last_command.command = 'show_all_results_denied'
+        last_command.save()
+        bot.send_message(message.chat.id, 'Для выполнения данной команды нужно обладать правами администратора.', parse_mode='html')
+    else:
+        last_command.command = 'show_all_results'
+        last_command.save()
+        res = ''
+        for num, user in enumerate(User.select()):
+            add = ''
+            for num, achievement in enumerate(Achievement.select().where(Achievement.user == user), 1):
+                add += '- {}. {}/{}, {}\n'.format(achievement.test.name, achievement.correct_answers, achievement.test.n_samples, str_time(achievement.elapsed_time))
+            if add != '':
+                res += '{}. {}:\n'.format(num, user.name)
+                res += add + '\n'
+        if res == '':
+            res = 'Никто еще не проходил тесты.'
+        bot.send_message(message.chat.id, res, parse_mode='html')
     
     
 @bot.message_handler(commands=['create_test'])
