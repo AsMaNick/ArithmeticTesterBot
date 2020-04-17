@@ -34,7 +34,7 @@ class LastTestInfo(BaseModel):
     questions = IntegerField(null=True)
     correct_answers = IntegerField(null=True)
     start_time = FloatField(null=True)
-    last_answer = FloatField(null=True)
+    last_answer = CharField(null=True)
     
     def get_percentage(self):
         return self.correct_answers / self.questions
@@ -70,7 +70,7 @@ Question.create_table()
 Achievement.create_table()
 print('Users:')
 for user in User.select():
-    print(user.chat_id, user.name, user.last_command.command)
+    print(user.chat_id, user.name, user.last_command.command, user.last_test)
 print('Tests:')
 for test in Test.select():
     questions = [question.question_id for question in test.questions]

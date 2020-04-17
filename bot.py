@@ -14,7 +14,8 @@ bot = telebot.TeleBot(token)
 admin_ids = [273440998, 486330780]
 forward_ids = [273440998, 486330780]
 question_groups = ['+-a+-(+-b), целые [1; 50]',
-                   '+-a+-(+-b), десятичные дроби [1; 20)']
+                   '+-a+-(+-b), десятичные дроби [1; 20)',
+                   'ax^2 + bx + c = 0, определение параметров']
 help_text = open('data/help.txt', 'r', encoding='utf8').read()
 stickers = load(open('data/stickers.json', 'r'))
 
@@ -65,7 +66,7 @@ def show_results(message):
     if res == '':
         res = 'У тебя нет ни одного пройденного теста.'
     bot.send_message(message.chat.id, res, parse_mode='html')
-
+    
     
 @bot.message_handler(commands=['create_test'])
 def create_test(message):
@@ -241,18 +242,21 @@ def reply_all_messages(message):
         for chat_id in unique_elements([message.chat.id] + forward_ids):
             bot.send_message(chat_id, 'Задание №{}. {}'.format(last_test.questions + 1, question), parse_mode='html')
     elif last_command.command == 'process_test':
-        try:
-            answer = float(message.text)
-        except Exception as E:
-            bot.send_message(message.chat.id, 'Введите корректное число', parse_mode='html')
-            return
         last_test = user.last_test
-        if is_equal(answer, last_test.last_answer):
+        answer_len = len(parse_float_list(message.text))
+        ok_len = len(parse_float_list(last_test.last_answer))
+        if answer_len != ok_len:
+            res = 'Введите корректное число'
+            if ok_len >= 2:
+                res = 'Введите корректную последовательность из {} чисел'.format(ok_len)
+            bot.send_message(message.chat.id, res, parse_mode='html')
+            return
+        if check_answer(last_test.last_answer, message.text):
             last_test.correct_answers += 1
             last_test.save()
             res = 'Правильно!\n\n'
         else:
-            res = 'Неправильно, ответ равен {}\n\n'.format(get_str_value(last_test.last_answer, 5))
+            res = 'Неправильно, ответ равен {}\n\n'.format(last_test.last_answer)
         last_test.questions += 1
         if last_test.questions == last_test.test.n_samples:
             last_command.command = 'success_test'

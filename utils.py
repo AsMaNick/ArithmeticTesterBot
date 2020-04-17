@@ -27,11 +27,52 @@ def parse_int_list(s):
     return res
     
 
+def parse_float_list(s):
+    res = []
+    last = 0
+    started = False
+    pos_after_dot = 0
+    sign = 0
+    for c in s:
+        if '0' <= c <= '9':
+            started = True
+            if sign == 0:
+                sign = 1
+            if pos_after_dot == 0:
+                last = last * 10 + ord(c) - ord('0')
+            else:
+                last = last + (ord(c) - ord('0')) / (10 ** pos_after_dot)
+                pos_after_dot += 1
+        else:
+            if started and c == '.' and pos_after_dot == 0:
+                pos_after_dot = 1
+            elif started:
+                res.append(sign * last)
+                last = 0
+                sign = 0
+                started = False
+                pos_after_dot = 0
+            elif c == '-':
+                sign = -1
+    if started:
+        res.append(sign * last)
+    return res
+
+    
 def unique_elements(a):
     return sorted(list(set(a)))
 
     
 def is_equal(x, y):
+    if isinstance(x, list):
+        if isinstance(y, list):
+            if len(x) != len(y):
+                return False
+            for a, b in zip(x, y):
+                if not is_equal(a, b):
+                    return False
+            return True
+        return False
     return abs(x - y) <= 1e-6
     
     
@@ -43,10 +84,30 @@ def round_to(x, n):
     return float('{:.{}f}'.format(x, n))
 
     
-def get_str_value(x, n=10):
+def get_str_value(x, n=8):
+    x = round_to(x, n)
     if is_equal(x, int(x)):
         return str(int(x))
-    return str(round_to(x, n))
+    return str(x)
+    
+    
+def get_signed_value(x, without_plus=False, show_one=False, show_zero=True, n_spaces=0):
+    if not show_zero and abs(x) <= 1e-7:
+        return ''
+    spaces = ' ' * n_spaces
+    if not show_one:
+        if is_equal(x, 1):
+            if without_plus:
+                return ''
+            return '+' + spaces
+        if is_equal(x, -1):
+            return '-' + spaces
+    res = get_str_value(x)
+    if res[0] == '-':
+        return '-' + spaces + res[1:]
+    if without_plus:
+        return res
+    return '+' + spaces + res
     
     
 def str_time(t):
@@ -67,3 +128,7 @@ def get_text_comment(p):
     elif p < 90:
         return 'Хорошо! У тебя получается!'
     return 'Отлично, ты молодец :)'
+    
+    
+def check_answer(correct, answer):
+    return is_equal(parse_float_list(correct), parse_float_list(answer))
