@@ -80,12 +80,12 @@ def show_all_results(message):
         last_command.command = 'show_all_results'
         last_command.save()
         res = ''
-        for num, user in enumerate(User.select()):
+        for user_num, user in enumerate(User.select(), 1):
             add = ''
             for num, achievement in enumerate(Achievement.select().where(Achievement.user == user), 1):
                 add += '- {}. {}/{}, {}\n'.format(achievement.test.name, achievement.correct_answers, achievement.test.n_samples, str_time(achievement.elapsed_time))
             if add != '':
-                res += '{}. {}:\n'.format(num, user.name)
+                res += '{}. {}:\n'.format(user_num, user.name)
                 res += add + '\n'
         if res == '':
             res = 'Никто еще не проходил тесты.'
