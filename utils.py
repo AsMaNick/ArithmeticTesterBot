@@ -52,7 +52,7 @@ def parse_float_list(s):
                 sign = 0
                 started = False
                 pos_after_dot = 0
-            elif c == '-':
+            if c == '-':
                 sign = -1
     if started:
         res.append(sign * last)

@@ -18,6 +18,7 @@ def test_parse_float_list():
     assert(is_equal(parse_float_list('1 2 3, 4.5, 13.3, 1, 0; 123.1123'), [1, 2, 3, 4.5, 13.3, 1, 0, 123.1123]))
     assert(is_equal(parse_float_list('-1 -2 -3, -4.5, -13.3, -1, -0; -123.1123'), [-1, -2, -3, -4.5, -13.3, -1, 0, -123.1123]))
     assert(is_equal(parse_float_list('-1 2 -3, 4.5, 13.3, -1, 0; -123.1123'), [-1, 2, -3, 4.5, 13.3, -1, 0, -123.1123]))
+    assert(is_equal(parse_float_list('-1-2 -9.12-13.41 abc-abc 12'), [-1, -2, -9.12, -13.41, -12]))
     
     
 def test_get_str_value():
