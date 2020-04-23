@@ -15,7 +15,8 @@ admin_ids = [273440998, 486330780]
 forward_ids = [273440998, 486330780]
 question_groups = ['+-a+-(+-b), целые [1; 50]',
                    '+-a+-(+-b), десятичные дроби [1; 20)',
-                   'ax^2 + bx + c = 0, определение параметров']
+                   'ax^2 + bx + c = 0, определение параметров',
+                   'ax^2 + bx + c = 0, дискриминант']
 help_text = open('data/help.txt', 'r', encoding='cp1251').read()
 stickers = load(open('data/stickers.json', 'r'))
 

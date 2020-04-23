@@ -21,8 +21,10 @@ def get_question_by_id(id):
                '-(-{}) - {}'.format(a, b)]
         res = np.random.choice(all, 1)[0]
         return 'Вычисли: {}'.format(res), '{}'.format(get_str_value(eval(res), n=5))
-    elif id == 3:
+    elif id <= 4:
         l, r = -9, 10
+        if id == 4:
+            l, r = -5, 5
         def get_coefficient():
             if np.random.rand() < 0.2:
                 return np.random.choice([-1, 1])
@@ -45,8 +47,18 @@ def get_question_by_id(id):
                 res += '{}x'.format(get_signed_value(a[p[i]], without_plus=(res == ''), n_spaces=n_spaces))
             else:
                 res += '{}'.format(get_signed_value(a[p[i]], without_plus=(res == ''), show_one=True, n_spaces=n_spaces))
-        return 'Последовательно выпиши три числа: коэффициенты <b>a, b, c</b> квадратного уравнения.\n\n{} = 0'.format(res), \
-               '{}, {}, {}'.format(get_str_value(a[0], n=5), get_str_value(a[1], n=5), get_str_value(a[2], n=5))
+        if id == 3:
+            return 'Последовательно выпиши три числа: коэффициенты <b>a, b, c</b> квадратного уравнения.\n\n{} = 0'.format(res), \
+                   '{}, {}, {}'.format(get_str_value(a[0], n=5), get_str_value(a[1], n=5), get_str_value(a[2], n=5))
+        else:
+            D = a[1] ** 2 - 4 * a[0] * a[2]
+            roots = 2
+            if D == 0:
+                roots = 1
+            elif D < 0:
+                roots = 0
+            return 'Последовательно выпиши два числа: дискриминант и количество различных корней квадратного уравнения.\n\n{} = 0'.format(res), \
+                   '{}, {}'.format(get_str_value(D, n=5), get_str_value(roots, n=5))
                 
                 
 def get_question(test):
