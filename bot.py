@@ -14,9 +14,10 @@ bot = telebot.TeleBot(token)
 admin_ids = [273440998, 486330780]
 forward_ids = [273440998, 486330780]
 question_groups = ['+-a+-(+-b), целые [1; 50]',
-                   '+-a+-(+-b), десятичные дроби [1; 20)',
+                   '+-a+-(+-b), десятичные дроби [1; 10)',
                    'ax^2 + bx + c = 0, определение параметров',
-                   'ax^2 + bx + c = 0, дискриминант']
+                   'ax^2 + bx + c = 0, дискриминант',
+                   'ax^2 + bx + c = 0, нахождение корней']
 help_text = open('data/help.txt', 'r', encoding='cp1251').read()
 stickers = load(open('data/stickers.json', 'r'))
 
@@ -270,7 +271,7 @@ def reply_all_messages(message):
         last_test = user.last_test
         answer_len = len(parse_float_list(message.text))
         ok_len = len(parse_float_list(last_test.last_answer))
-        if answer_len != ok_len:
+        if answer_len != ok_len and last_test.last_answer[0] != 's':
             res = 'Введите корректное число'
             if ok_len >= 2:
                 res = 'Введите корректную последовательность из {} чисел'.format(ok_len)
@@ -281,7 +282,7 @@ def reply_all_messages(message):
             last_test.save()
             res = 'Правильно!\n\n'
         else:
-            res = 'Неправильно, ответ равен {}\n\n'.format(last_test.last_answer)
+            res = 'Неверно, правильный ответ: {}\n\n'.format(get_correct_answer(last_test.last_answer))
         last_test.questions += 1
         if last_test.questions == last_test.test.n_samples:
             last_command.command = 'success_test'

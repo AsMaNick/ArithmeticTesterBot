@@ -131,4 +131,16 @@ def get_text_comment(p):
     
     
 def check_answer(correct, answer):
-    return is_equal(parse_float_list(correct), parse_float_list(answer))
+    correct_list = parse_float_list(correct)
+    answer_list = parse_float_list(answer)
+    if len(correct_list) != len(answer_list):
+        return False
+    if correct[0] == 's':
+        return is_equal(correct_list[0], answer_list[0]) and is_equal(sorted(correct_list[1:]), sorted(answer_list[1:]))
+    return is_equal(correct_list, answer_list)
+    
+    
+def get_correct_answer(answer):
+    if answer[:2] == 's ':
+        return answer[2:]
+    return answer
