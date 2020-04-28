@@ -269,12 +269,20 @@ def reply_all_messages(message):
             bot.send_message(chat_id, 'Задание №{}. {}'.format(last_test.questions + 1, question), parse_mode='html')
     elif last_command.command == 'process_test':
         last_test = user.last_test
-        answer_len = len(parse_float_list(message.text))
-        ok_len = len(parse_float_list(last_test.last_answer))
-        if answer_len != ok_len and last_test.last_answer[0] != 's':
+        answer_list = parse_float_list(message.text)
+        ok_list = parse_float_list(last_test.last_answer)
+        if last_test.last_answer[0] == 's' and len(answer_list) == 0:
+            res = 'Введите непустую последовательность чисел'
+            bot.send_message(message.chat.id, res, parse_mode='html')
+            return
+        if last_test.last_answer[0] == 's' and not is_equal(len(answer_list), answer_list[0] + 1):
+            res = 'Первое число должно означать длину последовательности чисел'
+            bot.send_message(message.chat.id, res, parse_mode='html')
+            return
+        if len(answer_list) != len(ok_list) and last_test.last_answer[0] != 's':
             res = 'Введите корректное число'
-            if ok_len >= 2:
-                res = 'Введите корректную последовательность из {} чисел'.format(ok_len)
+            if len(ok_list) >= 2:
+                res = 'Введите корректную последовательность из {} чисел'.format(len(ok_list))
             bot.send_message(message.chat.id, res, parse_mode='html')
             return
         if check_answer(last_test.last_answer, message.text):
