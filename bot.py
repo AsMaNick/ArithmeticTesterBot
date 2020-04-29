@@ -119,7 +119,7 @@ def edit_test(message):
     else:
         last_command.command = 'edit_test'
         last_command.save()
-        res = 'Выберите id теста:\n\n'
+        res = 'Выберите номер теста:\n\n'
         for test in Test.select():
             res += '{}. {}\n'.format(test.id, test.name)
         bot.send_message(message.chat.id, res, parse_mode='html')
@@ -131,7 +131,7 @@ def start_test(message):
     last_command = user.last_command
     last_command.command = 'start_test'
     last_command.save()
-    res = 'Выберите id теста:\n\n'
+    res = 'Выберите номер теста:\n\n'
     for test in Test.select():
         res += '{}. {}\n'.format(test.id, test.name)
     bot.send_message(message.chat.id, res, parse_mode='html')
@@ -186,11 +186,11 @@ def reply_all_messages(message):
     elif last_command.command == 'edit_test':
         test_id = parse_int_list(message.text)
         if len(test_id) != 1:
-            bot.send_message(message.chat.id, 'Введите корректное id теста:', parse_mode='html')
+            bot.send_message(message.chat.id, 'Введите корректный номер теста:', parse_mode='html')
             return
         test = Test.get_or_none(Test.id == test_id[0])
         if test is None:
-            bot.send_message(message.chat.id, 'Введите корректное id теста:', parse_mode='html')
+            bot.send_message(message.chat.id, 'Введите корректный номер теста:', parse_mode='html')
             return
         last_command.command = 'edit_test1'
         last_command.edit_test_id = test_id[0]
@@ -249,11 +249,11 @@ def reply_all_messages(message):
     elif last_command.command == 'start_test':
         test_id = parse_int_list(message.text)
         if len(test_id) != 1:
-            bot.send_message(message.chat.id, 'Введите корректное id теста:', parse_mode='html')
+            bot.send_message(message.chat.id, 'Введите корректный номер теста:', parse_mode='html')
             return
         test = Test.get_or_none(Test.id == test_id[0])
         if test is None:
-            bot.send_message(message.chat.id, 'Введите корректное id теста:', parse_mode='html')
+            bot.send_message(message.chat.id, 'Введите корректный номер теста:', parse_mode='html')
             return
         question, answer = get_question(test)
         last_command.command = 'process_test'
