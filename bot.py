@@ -41,6 +41,21 @@ def start(message):
     bot.send_message(message.chat.id, help_text, parse_mode='html')
     
     
+@bot.message_handler(commands=['send_reminder'])
+def send_reminder(message):
+    user = init_user(message)
+    last_command = user.last_command
+    last_command.command = 'send_reminder'
+    last_command.save()
+    if user.chat_id not in admin_ids:
+        last_command.command = 'send_reminder_denied'
+        last_command.save()
+        bot.send_message(message.chat.id, 'Для выполнения данной команды нужно обладать правами администратора.', parse_mode='html')
+    else:
+        bot.send_sticker(message.chat.id, stickers['bad'])
+        bot.send_sticker(814870650, stickers['bad'])
+    
+    
 @bot.message_handler(commands=['list_tests'])
 def list_tests(message):
     user = init_user(message)
