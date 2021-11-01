@@ -106,8 +106,72 @@ def get_question_by_id(id):
                 x1, x2 = x2, x1
             ans += '2 корня, x₁ = {}, x₂ = {}'.format(get_str_value(x1), get_str_value(x2))
         return 'Последовательно выпиши количество различных корней квадратного уравнения и сами корни.\n\n{} = 0\n\nИспользуй тот факт, что дискриминант D = {}'.format(res, get_str_value(D)), ans
-
-        
+    elif 6 <= id and id <= 11:
+        def get_all_primes(n):
+            is_prime = [True for i in range(n)]
+            res = []
+            for i in range(2, n):
+                if is_prime[i]:
+                    res.append(i)
+                    for j in range(2 * i, n, i):
+                        is_prime[j] = False
+            return res
+        if id == 6:
+            mods = get_all_primes(51)
+            probs = np.array(mods) ** 0.5
+            probs /= np.sum(probs)
+            mod = np.random.choice(mods, p=probs)
+            a = np.random.randint(mod)
+            b = np.random.randint(mod)
+            return f'Вычисли {a} + {b} в поле по модулю {mod}', (a + b) % mod
+        elif id == 7:
+            mods = get_all_primes(51)
+            probs = np.array(mods) ** 0.5
+            probs /= np.sum(probs)
+            mod = np.random.choice(mods, p=probs)
+            if np.random.rand() < 0.1:
+                a = np.random.randint(1, mod)
+                return f'Вычисли {-a} в поле по модулю {mod}', (-a) % mod
+            a = np.random.randint(mod)
+            b = np.random.randint(mod)
+            return f'Вычисли {a} - {b} в поле по модулю {mod}', (a - b) % mod
+        elif id == 8:
+            mods = get_all_primes(14)
+            probs = np.array(mods) ** 0.5
+            probs /= np.sum(probs)
+            mod = np.random.choice(mods, p=probs)
+            a = np.random.randint(mod)
+            b = np.random.randint(mod)
+            return f'Вычисли {a} * {b} в поле по модулю {mod}', (a * b) % mod
+        else:
+            def inverse(x, mod):
+                def power(x, n, mod):
+                    res = 1
+                    while n > 0:
+                        if n % 2 == 1:
+                            res = (res * x) % mod
+                        x = (x * x) % mod
+                        n //= 2
+                    return res
+                return power(x, mod - 2, mod)
+            mods = get_all_primes(12)
+            probs = np.array(mods) ** 1.0
+            probs /= np.sum(probs)
+            mod = np.random.choice(mods, p=probs)
+            if id == 9:
+                a = np.random.randint(1, mod)
+                return f'Вычисли обратный элемент к числу {a} в поле по модулю {mod}', inverse(a, mod)
+            elif id == 10:
+                a = np.random.randint(mod)
+                b = np.random.randint(1, mod)
+                return f'Вычисли {a} / {b} в поле по модулю {mod}', (a * inverse(b, mod)) % mod
+            else:
+                a = np.random.randint(mod)
+                b = np.random.randint(1, mod)
+                c = np.random.randint(mod)
+                d = np.random.randint(1, mod)
+                sign = np.random.choice(['+', '-'])
+                return f'Вычисли {a}/{b} {sign} {c}/{d} в поле по модулю {mod}', eval(f'a * inverse(b, mod) {sign} c * inverse(d, mod)') % mod
 def get_question(test):
     ids = [question.question_id for question in test.questions]
     id = np.random.choice(ids, 1)[0]

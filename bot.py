@@ -11,13 +11,19 @@ from questions import *
 
 token = open('data/token.txt', 'r').read()
 bot = telebot.TeleBot(token)
-admin_ids = [273440998, 486330780]
-forward_ids = [273440998, 486330780]
+admin_ids = [273440998]
+forward_ids = [273440998]
 question_groups = ['+-a+-(+-b), целые [1; 50]',
                    '+-a+-(+-b), десятичные дроби [1; 10)',
                    'ax^2 + bx + c = 0, определение параметров',
                    'ax^2 + bx + c = 0, дискриминант',
-                   'ax^2 + bx + c = 0, нахождение корней']
+                   'ax^2 + bx + c = 0, нахождение корней',
+                   'a + b, в поле по модулю',
+                   'a - b, в поле по модулю',
+                   'a*b в поле по модулю',
+                   '1/a в поле по модулю',
+                   'a/b в поле по модулю',
+                   'a/b +- c/d в поле по модулю']
 help_text = open('data/help.txt', 'r', encoding='cp1251').read()
 stickers = load(open('data/stickers.json', 'r'))
 
